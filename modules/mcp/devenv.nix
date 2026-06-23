@@ -87,13 +87,13 @@ in
       };
     };
 
-    cline = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = "Whether to generate .cline/mcp.json for Cline";
-      };
-    };
+    # cline = {
+    #   enable = lib.mkOption {
+    #     type = lib.types.bool;
+    #     default = true;
+    #     description = "Whether to generate .cline/mcp.json for Cline";
+    #   };
+    # };
 
     # Input variable definitions for sensitive data (VS Code only)
     inputs = lib.mkOption {
@@ -177,17 +177,17 @@ in
             description = "Tools to auto-approve (Roo Code only)";
           };
 
-          # Cline only
-          autoApprove = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            default = [ ];
-            description = "Tools to auto-approve (Cline only)";
-          };
+          # # Cline only
+          # autoApprove = lib.mkOption {
+          #   type = lib.types.listOf lib.types.str;
+          #   default = [ ];
+          #   description = "Tools to auto-approve (Cline only)";
+          # };
 
           disabled = lib.mkOption {
             type = lib.types.bool;
             default = false;
-            description = "Disable this server (Roo Code / Cline)";
+            description = "Disable this server (Roo Code only)";
           };
 
           disabledTools = lib.mkOption {
@@ -282,9 +282,8 @@ in
       default = { };
       description = ''
         IDE MCP server configurations. Each server is written to
-        `.roo/mcp.json`, `.vscode/mcp.json`, `.cursor/mcp.json`,
-        and `.cline/mcp.json` with target-appropriate field filtering
-        and key conventions.
+        `.roo/mcp.json`, `.vscode/mcp.json`, and `.cursor/mcp.json`
+        with target-appropriate field filtering and key conventions.
       '';
     };
   };
@@ -352,20 +351,20 @@ in
         };
     })
 
-    # Cline — top-level key: mcpServers
-    (lib.mkIf config.mcp.cline.enable {
-      files.".cline/mcp.json".json = {
-        mcpServers = lib.mapAttrs (name: server:
-          (mkServerEntry server)
-          // lib.optionalAttrs server.disabled {
-            disabled = true;
-          }
-          // lib.optionalAttrs (server.autoApprove != [ ]) {
-            autoApprove = server.autoApprove;
-          }
-        ) config.mcp.servers;
-      };
-    })
+    # # Cline — top-level key: mcpServers
+    # (lib.mkIf config.mcp.cline.enable {
+    #   files.".cline/mcp.json".json = {
+    #     mcpServers = lib.mapAttrs (name: server:
+    #       (mkServerEntry server)
+    #       // lib.optionalAttrs server.disabled {
+    #         disabled = true;
+    #       }
+    #       // lib.optionalAttrs (server.autoApprove != [ ]) {
+    #         autoApprove = server.autoApprove;
+    #       }
+    #     ) config.mcp.servers;
+    #   };
+    # })
 
     # Cursor — top-level key: mcpServers, type required for STDIO
     (lib.mkIf config.mcp.cursor.enable {
