@@ -90,7 +90,7 @@ in
     cline = {
       enable = lib.mkOption {
         type = lib.types.bool;
-        default = false;
+        default = true;
         description = "Whether to generate .cline/mcp.json for Cline";
       };
     };
